@@ -1,10 +1,7 @@
 io = require('socket.io').listen 81
 
 io.sockets.on 'connection', (socket) ->
-	socket.on 'set nick', (name) ->
-		socket.set 'nick', name, ->
-			socket.emit 'ready'
-	
-	socket.on 'msg', ->
-		socket.get 'nickname', (name) ->
-			console.log 'Chat messaged by', name
+	console.log 'hi'
+	socket.emit 'news', { hello: 'world' }
+	socket.on 'my other event', (data) ->
+		console.log data

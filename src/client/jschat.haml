@@ -1,11 +1,12 @@
 %html
 	%head
 		%link{:href=>'jschat.css',:rel=>'stylesheet'}
-		%script	
+		%script{:src=>'http://cdn.socket.io/stable/socket.io.js'}
+		%script{:src=>'jschat.js'}
 
 	%body
 		#main
 		
 		#footer		
-			%form#chatform
+			%form#chatform{:action=>'javascript:alert("hi");'}
 				%input{:type=>'text'}	

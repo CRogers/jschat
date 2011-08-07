@@ -1,14 +1,13 @@
-var io;
-io = require('socket.io').listen(81);
-io.sockets.on('connection', function(socket) {
-  socket.on('set nick', function(name) {
-    return socket.set('nick', name, function() {
-      return socket.emit('ready');
+(function() {
+  var io;
+  io = require('socket.io').listen(81);
+  io.sockets.on('connection', function(socket) {
+    console.log('hi');
+    socket.emit('news', {
+      hello: 'world'
+    });
+    return socket.on('my other event', function(data) {
+      return console.log(data);
     });
   });
-  return socket.on('msg', function() {
-    return socket.get('nickname', function(name) {
-      return console.log('Chat messaged by', name);
-    });
-  });
-});
+}).call(this);
