@@ -1,6 +1,6 @@
 (function() {
   var socket;
-  socket = new io.Socket('http://localhost', {
+  socket = io.connect('http://localhost', {
     port: 81
   });
   socket.on('news', function(data) {
@@ -9,5 +9,4 @@
       my: 'data'
     });
   });
-  socket.connect();
 }).call(this);
