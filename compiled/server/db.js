@@ -4,7 +4,10 @@
   mongoose.connect('mongodb://localhost/jschat');
   Schema = mongoose.Schema;
   AuthS = new Schema({
-    auth: String,
+    auth: {
+      type: String,
+      unique: true
+    },
     nick: String,
     time: Date
   });
@@ -17,6 +20,14 @@
     a.time = new Date();
     return a.save(function(err) {
       return console.log(err);
+    });
+  };
+  exports.getnick = function(auth, callback) {
+    console.log("db.getnick " + auth);
+    return Auth.findOne({
+      auth: auth
+    }, function(auth) {
+      return console.log(auth);
     });
   };
 }).call(this);

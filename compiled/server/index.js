@@ -4,7 +4,21 @@
   io = require('socket.io').listen(81);
   io.sockets.on('connection', function(socket) {
     console.log('hi');
-    socket.emit('giveauth', guid());
+    socket.on('sendauth', function(auth) {
+      return db.getnick(auth, function(nick) {
+        return socket.emit('getnick', nick);
+      });
+    });
+    socket.on('reqauth', function() {
+      var auth;
+      auth = guid();
+      db.setnick(auth, 'noname');
+      socket.emit('getauth', auth);
+      return db.getnick(auth, function(nick) {
+        console.log('hi');
+        return socket.emit('getnick', nick);
+      });
+    });
     return socket.on('nick', function(data) {
       console.log(data);
       return db.setnick(data.auth, data.data);

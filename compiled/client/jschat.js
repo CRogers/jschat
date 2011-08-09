@@ -1,11 +1,31 @@
-var addauth, auth, commands, message, socket;
+var addauth, auth, commands, message, nick, socket;
 auth = '';
+nick = '';
 socket = io.connect('http://localhost', {
   port: 81
 });
-socket.on('giveauth', function(data) {
-  console.log(data);
-  return auth = data;
+socket.on('connect', function() {
+  var cookie;
+  console.log('connected');
+  cookie = $.cookie('auth');
+  if (cookie !== null) {
+    console.log('sendauth');
+    return socket.emit('sendauth', cookie);
+  } else {
+    console.log('reqauth');
+    return socket.emit('reqauth');
+  }
+});
+socket.on('getauth', function(data) {
+  console.log("getauth " + data);
+  auth = data;
+  return $.cookie('auth', data, {
+    expires: 365
+  });
+});
+socket.on('getnick', function(data) {
+  console.log("getnick " + data);
+  return nick = data;
 });
 message = function(data) {
   var cmd, split;
