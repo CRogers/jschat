@@ -10,5 +10,5 @@
 		#main
 		
 		#footer		
-			%form#chatform{:action=>'javascript:alert("hi");'}
-				%input{:type=>'text'}	
+			%form#chatform{:action=>'javascript:message($("#chat").val());'}
+				%input{:type=>'text',:id=>'chat'}	

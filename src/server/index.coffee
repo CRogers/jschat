@@ -2,23 +2,21 @@ db = require './db'
 
 io = require('socket.io').listen 81
 
-io.sockets.on 'connection', (socket) ->
-	console.log 'hi'
+io.sockets.on 'connection', (socket) ->	
+	socket.on 'auth.send', (auth) ->
+		db.nick.get auth, (nick) -> socket.emit 'nick.get', nick
 	
-	socket.on 'sendauth', (auth) ->
-		db.getnick auth, (nick) -> socket.emit 'getnick', nick
-	
-	socket.on 'reqauth', ->
+	socket.on 'auth.req', ->
 		auth = guid()
-		db.setnick auth, 'noname'
-		socket.emit 'getauth', auth
-		db.getnick auth, (nick) -> 
-			console.log 'hi'
-			socket.emit 'getnick', nick
+		db.nick.new auth, 'noname'
+		socket.emit 'auth.get', auth
+		socket.emit 'nick.get', 'noname'
 	
-	socket.on 'nick', (data) ->
+	socket.on 'nick.set', (data) ->
 		console.log data
-		db.setnick data.auth, data.data
+		db.nick.set data.auth, data.data, -> 
+			db.nick.get data.auth, (nick) -> 
+				socket.emit 'nick.get', nick
 		
 guid = ->
 	S4 = -> 

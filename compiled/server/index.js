@@ -3,25 +3,25 @@
   db = require('./db');
   io = require('socket.io').listen(81);
   io.sockets.on('connection', function(socket) {
-    console.log('hi');
-    socket.on('sendauth', function(auth) {
-      return db.getnick(auth, function(nick) {
-        return socket.emit('getnick', nick);
+    socket.on('auth.send', function(auth) {
+      return db.nick.get(auth, function(nick) {
+        return socket.emit('nick.get', nick);
       });
     });
-    socket.on('reqauth', function() {
+    socket.on('auth.req', function() {
       var auth;
       auth = guid();
-      db.setnick(auth, 'noname');
-      socket.emit('getauth', auth);
-      return db.getnick(auth, function(nick) {
-        console.log('hi');
-        return socket.emit('getnick', nick);
-      });
+      db.nick["new"](auth, 'noname');
+      socket.emit('auth.get', auth);
+      return socket.emit('nick.get', 'noname');
     });
-    return socket.on('nick', function(data) {
+    return socket.on('nick.set', function(data) {
       console.log(data);
-      return db.setnick(data.auth, data.data);
+      return db.nick.set(data.auth, data.data, function() {
+        return db.nick.get(data.auth, function(nick) {
+          return socket.emit('nick.get', nick);
+        });
+      });
     });
   });
   guid = function() {

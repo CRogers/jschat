@@ -9,19 +9,20 @@ socket.on 'connect', ->
 	console.log 'connected'
 	cookie = $.cookie 'auth'
 	if cookie != null
-		console.log 'sendauth'
-		socket.emit 'sendauth', cookie
+		console.log 'auth.send'
+		auth = cookie
+		socket.emit 'auth.send', cookie
 	else
-		console.log 'reqauth'
-		socket.emit 'reqauth'
+		console.log 'auth.req'
+		socket.emit 'auth.req'
 
-socket.on 'getauth', (data) ->
-	console.log "getauth #{data}"
+socket.on 'auth.get', (data) ->
+	console.log "auth.get #{data}"
 	auth = data
 	$.cookie 'auth', data, {expires: 365}
 
-socket.on 'getnick', (data) ->
-	console.log "getnick #{data}"
+socket.on 'nick.get', (data) ->
+	console.log "nick.get #{data}"
 	nick = data
 
 message = (data) ->
@@ -35,7 +36,7 @@ message = (data) ->
 
 commands =
 	nick: (nickname) ->
-		socket.emit 'nick', addauth nickname
+		socket.emit 'nick.set', addauth nickname
 		
 addauth = (data) ->
 	{auth: auth, data: data}

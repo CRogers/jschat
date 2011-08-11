@@ -9,8 +9,8 @@
   <body>
     <div id='main'></div>
     <div id='footer'>
-      <form action='javascript:alert("hi");' id='chatform'>
-        <input type='text' />
+      <form action='javascript:message($("#chat").val());' id='chatform'>
+        <input id='chat' type='text' />
       </form>
     </div>
   </body>

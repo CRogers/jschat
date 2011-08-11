@@ -9,22 +9,23 @@ socket.on('connect', function() {
   console.log('connected');
   cookie = $.cookie('auth');
   if (cookie !== null) {
-    console.log('sendauth');
-    return socket.emit('sendauth', cookie);
+    console.log('auth.send');
+    auth = cookie;
+    return socket.emit('auth.send', cookie);
   } else {
-    console.log('reqauth');
-    return socket.emit('reqauth');
+    console.log('auth.req');
+    return socket.emit('auth.req');
   }
 });
-socket.on('getauth', function(data) {
-  console.log("getauth " + data);
+socket.on('auth.get', function(data) {
+  console.log("auth.get " + data);
   auth = data;
   return $.cookie('auth', data, {
     expires: 365
   });
 });
-socket.on('getnick', function(data) {
-  console.log("getnick " + data);
+socket.on('nick.get', function(data) {
+  console.log("nick.get " + data);
   return nick = data;
 });
 message = function(data) {
@@ -41,7 +42,7 @@ message = function(data) {
 };
 commands = {
   nick: function(nickname) {
-    return socket.emit('nick', addauth(nickname));
+    return socket.emit('nick.set', addauth(nickname));
   }
 };
 addauth = function(data) {
